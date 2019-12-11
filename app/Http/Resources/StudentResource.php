@@ -14,8 +14,9 @@ class StudentResource extends JsonResource
      */
     public function toArray($request)
     {
-        //return parent::toArray($request);
+        return parent::toArray($request);
 
+/*
         return [
             'data'=>[
                 'id'=> $this->id,
@@ -24,6 +25,6 @@ class StudentResource extends JsonResource
                 'email' => $this->email,
                 'status' => $this->status,
             ],
-        ]; 
+        ]; */
     }
 }

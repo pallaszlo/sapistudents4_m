@@ -18,7 +18,7 @@ class StudentController extends Controller
     public function index()
     {
         $studs = Student::all();  
-        //$studs = Student::paginate(4);              
+        //$studs = Student::paginate(2);              
         return new StudentCollection($studs);
     }
 

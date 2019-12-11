@@ -23,5 +23,10 @@ Route::post('students','API\StudentController@store');
 Route::put('students/{id}','API\StudentController@update');
 Route::delete('students/{id}','API\StudentController@destroy');
 
+
 Route::post('login', 'API\AuthController@login');
 Route::post('register', 'API\AuthController@register'); 
+Route::group(['middleware' => 'auth:api'], function(){
+   Route::post('details', 'API\AuthController@getDetails');
+   //Route::get('students','API\StudentController@index');
+});

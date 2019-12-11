@@ -10,6 +10,54 @@ use Validator;
 
 class AuthController extends Controller
 {
+
+/*
+  public function login(Request $request){ 
+    if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+      $user = Auth::user(); 
+      $success['token'] =  $user->createToken('sapistudents')->accessToken; 
+      return response()->json([
+        'status' => 'success',
+        'data' => $success
+      ]); 
+    } else { 
+      return response()->json([
+        'status' => 'error',
+        'data' => 'Unauthorized Access'
+      ]); 
+    } 
+  }
+
+
+
+  public function register(Request $request) 
+  { 
+    $validator = Validator::make($request->all(), [ 
+          'name' => 'required', 
+          'email' => 'required|email|unique:users', 
+          'password' => 'required' 
+    ]);
+    if ($validator->fails()) { 
+      return response()->json(['error'=>$validator->errors()]);
+    }
+    $postArray = $request->all(); 
+    $postArray['password'] = bcrypt($postArray['password']); 
+    $user = User::create($postArray); 
+    $success['token'] =  $user->createToken('sapistudents')->accessToken; 
+    $success['name'] =  $user->name;
+    return response()->json([
+      'status' => 'success',
+      'data' => $success,
+    ]); 
+  }*/
+
+  public function getDetails() 
+  { 
+    $user = Auth::user(); 
+    return response()->json(['success' => $user]); 
+  } 
+
+  
     public function register(Request $request)
     {
     	$validator = Validator::make($request->all(), [ 
@@ -20,7 +68,8 @@ class AuthController extends Controller
     	if ($validator->fails()) { 
       		return response()->json([
       			'error'=> true,
-      			'message' => "Hibas adatok",      			
+      			'message' => "Hibas adatok",
+            'user'=> [],      			
       		]);
     	} 
         
@@ -33,8 +82,12 @@ class AuthController extends Controller
         return response()->json([
             'error'=>false,
             'message' => 'Registered successfully!',
+            'user'=>[
+              'id'=>$user->id,
+              'name'=>$user->name,
+              'email'=>$user->email,
             ]
-        ]);
+        ]); 
 	}
 
 	public function login(Request $request)
@@ -46,14 +99,14 @@ class AuthController extends Controller
     	if ($validator->fails()) { 
       		return response()->json([
       			'error'=> true,
-      			'message' => "Hibas adatok",      			
+      			'message' => "Hibas adatok",                 		
       		]);
     	} 
         $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
-                    'error'=>true,
-            		'message' => 'Unauthorized!'            		
+                'error'=>true,
+            		'message' => 'Unauthorized!',  	
             ]);
  
         return response()->json([
@@ -61,5 +114,6 @@ class AuthController extends Controller
             'message' => 'Login successfully!'            
         ]);
     }
+    
 
 }
