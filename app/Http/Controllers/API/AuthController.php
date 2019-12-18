@@ -11,21 +11,38 @@ use Validator;
 class AuthController extends Controller
 {
 
-/*
+
   public function login(Request $request){ 
-    if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-      $user = Auth::user(); 
-      $success['token'] =  $user->createToken('sapistudents')->accessToken; 
-      return response()->json([
-        'status' => 'success',
-        'data' => $success
-      ]); 
-    } else { 
-      return response()->json([
-        'status' => 'error',
-        'data' => 'Unauthorized Access'
-      ]); 
-    } 
+      $validator = Validator::make($request->all(), [         
+          'email' => 'required|email', 
+          'password' => 'required'      
+      ]);
+      if ($validator->fails()) { 
+          return response()->json([
+            'error'=> true,
+            'message' => "Hibas adatok",                    
+          ]);
+      } 
+      
+      if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+          $user = Auth::user(); 
+          $token =  $user->createToken('sapistudents')->accessToken;
+          return response()->json([
+            'error' => false,
+            'message' => 'Successfull login!',
+            'access_token' => $token,
+            'user' => [
+              'id'=>$user->id,
+              'name'=>$user->name,
+              'email'=>$user->email,
+            ],
+          ]); 
+      } else { 
+          return response()->json([
+            'error'=>true,
+            'message' => 'Unauthorized Access!', 
+          ]); 
+      } 
   }
 
 
@@ -38,18 +55,27 @@ class AuthController extends Controller
           'password' => 'required' 
     ]);
     if ($validator->fails()) { 
-      return response()->json(['error'=>$validator->errors()]);
+          return response()->json([
+            'error'=> true,
+            'message' => "Hibas adatok",                    
+          ]);
     }
     $postArray = $request->all(); 
     $postArray['password'] = bcrypt($postArray['password']); 
     $user = User::create($postArray); 
-    $success['token'] =  $user->createToken('sapistudents')->accessToken; 
-    $success['name'] =  $user->name;
+    $token =  $user->createToken('sapistudents')->accessToken; 
+    
     return response()->json([
-      'status' => 'success',
-      'data' => $success,
+        'error' => false,
+        'message' => 'Successfull login!',
+        'access_token' => $token,
+        'user' => [
+          'id'=>$user->id,
+          'name'=>$user->name,
+          'email'=>$user->email,
+        ],
     ]); 
-  }*/
+  }
 
   public function getDetails() 
   { 
@@ -57,7 +83,7 @@ class AuthController extends Controller
     return response()->json(['success' => $user]); 
   } 
 
-  
+  /*
     public function register(Request $request)
     {
     	$validator = Validator::make($request->all(), [ 
@@ -113,7 +139,7 @@ class AuthController extends Controller
             'error'=>false,
             'message' => 'Login successfully!'            
         ]);
-    }
+    }*/
     
 
 }
